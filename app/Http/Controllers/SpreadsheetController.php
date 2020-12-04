@@ -43,9 +43,6 @@ class SpreadsheetController extends Controller
 									   ->get();
 		}
 
-		//dd($members->toArray());
-		//dd($payments);
-
 		return view('pages.spreadsheet', compact('members', 'collections', 'payments'));
 	}
 }

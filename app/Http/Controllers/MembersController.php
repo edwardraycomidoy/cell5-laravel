@@ -38,13 +38,13 @@ class MembersController extends Controller
 			'joined_on' => 'required|date'
 		]);
 
-		$member = Member::create([
-			'first_name' => $request->first_name,
-			'middle_initial' => $request->middle_initial,
-			'last_name' => $request->last_name,
-			'suffix' => $request->suffix,
-			'joined_on' => date('Y-m-d', strtotime($request->joined_on))
-		]);
+		$member = new Member;
+		$member->first_name = $request->first_name;
+		$member->middle_initial = $request->middle_initial;
+		$member->last_name = $request->last_name;
+		$member->suffix = $request->suffix;
+		$member->joined_on = date('Y-m-d', strtotime($request->joined_on));
+		$member->save();
 
 		return redirect()->route('members.show', ['member' => $member]);
 	}

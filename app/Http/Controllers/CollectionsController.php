@@ -15,11 +15,6 @@ class CollectionsController extends Controller
 {
 	private $regex = '/^[1-9]+\d*$/';
 
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
 	public function index()
 	{
 		$collections = DB::table('collections AS c')
@@ -31,11 +26,6 @@ class CollectionsController extends Controller
 		return view('pages.collections.index', compact('collections'));
 	}
 
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
 	public function create()
 	{
 		$members = Member::orderBy('last_name', 'asc')
@@ -45,12 +35,6 @@ class CollectionsController extends Controller
 		return view('pages.collections.create', compact('members'));
 	}
 
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @return \Illuminate\Http\Response
-	 */
 	public function store(Request $request)
 	{
 		$this->validate($request, [
@@ -61,12 +45,11 @@ class CollectionsController extends Controller
 
 		$current_time = Carbon::now()->toDateTimeString();
 
-		$data = [
-			'member_id' => (int)$request->member_id,
-			'due_on' => date('Y-m-d', strtotime($request->due_on)),
-			'created_at' => $current_time,
-			'updated_at' => $current_time
-		];
+		$collection = new Collection;
+		$collection->member_id = (int)$request->member_id;
+		$collection->due_on = date('Y-m-d', strtotime($request->due_on));
+		$collection->created_at = $current_time;
+		$collection->updated_at = $current_time;
 
 		if((int)$request->claimant == 1)
 		{
@@ -77,29 +60,23 @@ class CollectionsController extends Controller
 				'suffix' => 'nullable|max:5'
 			]);
 
-			$id = Beneficiary::insertGetId([
-				'first_name' => $request->first_name,
-				'middle_initial' => $request->middle_initial,
-				'last_name' => $request->last_name,
-				'suffix' => $request->suffix,
-				'created_at' => $current_time,
-				'updated_at' => $current_time
-			]);
+			$beneficiary = new Beneficiary;
+			$beneficiary->first_name = $request->first_name;
+			$beneficiary->middle_initial = $request->middle_initial;
+			$beneficiary->last_name = $request->last_name;
+			$beneficiary->suffix = $request->suffix;
+			$beneficiary->created_at = $current_time;
+			$beneficiary->updated_at = $current_time;
+			$beneficiary->save();
 
-			$data['beneficiary_id'] = $id;
+			$collection->beneficiary_id = $beneficiary->id;
 		}
 
-		$collection = Collection::create($data);
+		$collection->save();
 
 		return redirect()->route('collections.show', ['collection' => $collection]);
 	}
 
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
 	public function show($id)
 	{
 		if(preg_match($this->regex, $id) == 0)
@@ -141,35 +118,16 @@ class CollectionsController extends Controller
 		return view('pages.collections.show', compact('collection', 'unpaid_members', 'paid_members'));
 	}
 
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
 	public function edit($id)
 	{
 		//
 	}
 
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
 	public function update(Request $request, $id)
 	{
 		//
 	}
 
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
 	public function destroy($id)
 	{
 		//
