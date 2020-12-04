@@ -36,7 +36,7 @@
 			</div>
 			<br>
 			<div>
-				<label>First Initial</label>
+				<label>First Name</label>
 				<input type="text" name="first_name" disabled>
 			</div>
 			<br>

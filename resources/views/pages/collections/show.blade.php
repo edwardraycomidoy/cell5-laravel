@@ -49,6 +49,8 @@
 			</tbody>
 		</table>
 
+		<br>
+
 		<h2>Unpaid Members</h2>
 
 		@if($unpaid_members->count() > 0)
@@ -83,9 +85,11 @@
 
 		@endif
 
+		<br>
+
 		<h2>Paid Members</h2>
 
-		@if($unpaid_members->count() > 0)
+		@if($paid_members->count() > 0)
 
 			<table border="1" cellspacing="0" cellpadding="5">
 				<thead>
