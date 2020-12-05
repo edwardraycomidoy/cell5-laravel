@@ -8,15 +8,15 @@
 
 		<a href="{{ route('members.create') }}">Create</a>
 
-		<ul>
-			@foreach($members as $member)
-				<li>
-					<a href="{{ route('members.show', $member) }}">{{ $member->last_name . ', ' . $member->first_name . (!is_null($member->suffix) ? ' ' . $member->suffix : '') . (!is_null($member->middle_initial) ? ' ' . $member->middle_initial . '.' : '') }}</a>
-				</li>
-			@endforeach
-		</ul>
+		<br>
+		<br>
+		<form action="{{ route('members.search') }}" id="search-members-form">
+			<input type="text" name="keywords" placeholder="Search keywords..." value="{{ $keywords }}" autocomplete="off">
+		</form>
+		<br>
 
-		{{ $members->links() }}
+		<x-members-list :members="$members" />
+
 	</div>
 </div>
 

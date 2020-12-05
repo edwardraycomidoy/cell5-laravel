@@ -12,15 +12,71 @@ class MembersController extends Controller
 {
 	private $regex = '/^[1-9]+\d*$/';
 
-	private $per_page = 30;
+	private $per_page = 25;
 
-	public function index()
+	public function index(Request $request)
 	{
-		$members = Member::orderBy('last_name', 'asc')
+		$route = route('members.index');
+
+		$keywords = trim($request->keywords);
+
+		if($keywords == '')
+			$where = 'TRUE';
+
+		else
+		{
+			$keywords = array_filter(explode(' ', $keywords), function($string){ return addslashes(trim($string)) != ''; });
+
+			$where = '';
+			foreach($keywords as $i => $keyword)
+				$where .= ($i > 0 ? ' AND ' : '') . "(last_name LIKE '{$keyword}%' OR first_name LIKE '{$keyword}%')";
+
+			$keywords = urlencode(implode(' ', $keywords));
+
+			$route .= "?keywords={$keywords}";
+		}
+
+		$members = Member::whereRaw(DB::raw($where))
+						 ->orderBy('last_name', 'asc')
 						 ->orderBy('first_name', 'asc')
 						 ->orderBy('middle_initial', 'asc')
 						 ->simplePaginate($this->per_page);
-		return view('pages.members.index', compact('members'));
+
+		$members->setPath($route);
+
+		return view('pages.members.index', compact('members', 'keywords'));
+	}
+
+	public function search(Request $request)
+	{
+		$route = route('members.index');
+
+		$keywords = trim($request->keywords);
+
+		if($keywords == '')
+			$where = 'TRUE';
+
+		else
+		{
+			$keywords = explode(' ', $keywords);
+			$keywords = array_filter($keywords, function($string){ return addslashes(trim($string)) != ''; });
+
+			$where = '';
+			foreach($keywords as $i => $keyword)
+				$where .= ($i > 0 ? ' AND ' : '') . "(last_name LIKE '{$keyword}%' OR first_name LIKE '{$keyword}%')";
+
+			$route .= '?keywords=' . urlencode(implode(' ', $keywords));
+		}
+
+		$members = Member::whereRaw(DB::raw($where))
+						 ->orderBy('last_name', 'asc')
+						 ->orderBy('first_name', 'asc')
+						 ->orderBy('middle_initial', 'asc')
+						 ->simplePaginate($this->per_page);
+
+		$members->setPath($route);
+
+		return view('components.members-list', compact('members'));
 	}
 
 	public function create()

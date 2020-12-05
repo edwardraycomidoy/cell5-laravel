@@ -1,6 +1,5 @@
 $(function() {
-	$('input[type="radio"][name="claimant"]').on('change', function()
-	{
+	$('input[type="radio"][name="claimant"]').on('change', function() {
 		let value = parseInt($(this).val())
 
 		let bool
@@ -37,8 +36,7 @@ $(function() {
 	});
 	*/
 
-	$('svg.mark-paid, svg.mark-unpaid').on('click', function()
-	{
+	$('svg.mark-paid, svg.mark-unpaid').on('click', function() {
 		if(!$(this).hasClass('mark-paid') && !$(this).hasClass('mark-unpaid'))
 			return
 
@@ -79,11 +77,37 @@ $(function() {
 		}
 	});
 
-	$('#mark-paid-form, #mark-unpaid-form').on('submit', function(event)
-	{
+	$('#mark-paid-form, #mark-unpaid-form').on('submit', function(event) {
 		event.preventDefault()
 		$.post($(this).attr('action'), $(this).serialize(), function(data) {
 			
-		}, 'json');
+		}, 'json')
 	});
+
+
+
+
+
+
+
+	$('#search-members-form input[name="keywords"]').on('input', function() {
+		$.get($(this).closest('form').attr('action'), $(this).closest('form').serialize(), function(html) {
+			$('#members-list').replaceWith(html);
+		}, 'html')
+	})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 })

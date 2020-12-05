@@ -23,20 +23,29 @@
 		</style>
 	</head>
 	<body>
-		<header>
+		<header class="bg-primary mb-3">
 			<div class="container">
-				<br>
-				<a href="{{ route('members.index') }}">Members</a>
-				&nbsp;
-				&bull;
-				&nbsp;
-				<a href="{{ route('collections.index') }}">Collections</a>
-				&nbsp;
-				&bull;
-				&nbsp;
-				<a href="{{ route('spreadsheet') }}">Spreadsheet</a>
-				<br>
-				<br>
+				<nav class="navbar navbar-expand-lg navbar-dark px-0">
+					<a class="navbar-brand" href="{{ route('home') }}">Home</a>
+
+					<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#header-navbar">
+						<span class="navbar-toggler-icon"></span>
+					</button>
+
+					<div class="collapse navbar-collapse" id="header-navbar">
+						<ul class="navbar-nav mr-auto">
+							<li class="nav-item">
+								<a class="nav-link" href="{{ route('members.index') }}">Members</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="{{ route('collections.index') }}">Collections</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="{{ route('spreadsheet') }}">Spreadsheet</a>
+							</li>
+						</ul>
+					</div>
+				</nav>
 			</div>
 		</header>
 

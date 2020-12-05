@@ -18,12 +18,20 @@ use App\Http\Controllers\SpreadsheetController;
 |
 */
 
+/*
 Route::get('/', function() {
     return view('welcome');
 });
+*/
+
+Route::get('/', function() {
+    return view('home');
+})->name('home');
 
 Route::resource('members', MembersController::class);
 Route::resource('collections', CollectionsController::class);
 Route::resource('payments', PaymentsController::class)->only(['store', 'destroy']);
 
 Route::get('/spreadsheet', [SpreadsheetController::class, 'index'])->name('spreadsheet');
+
+Route::get('/members-search', [MembersController::class, 'search'])->name('members.search');
