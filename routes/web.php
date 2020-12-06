@@ -8,7 +8,6 @@ use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\MembersController;
 use App\Http\Controllers\CollectionsController;
 use App\Http\Controllers\PaymentsController;
-use App\Http\Controllers\SpreadsheetController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,7 +34,6 @@ Route::middleware(['auth'])->group(function() {
 	Route::resource('members', MembersController::class);
 	Route::resource('collections', CollectionsController::class);
 	Route::resource('payments', PaymentsController::class)->only(['store', 'destroy']);
-	Route::get('/spreadsheet', [SpreadsheetController::class, 'index'])->name('spreadsheet');
 });
 
 Route::post('/logout', [LogoutController::class, 'store'])->name('logout');

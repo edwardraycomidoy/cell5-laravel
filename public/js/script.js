@@ -20,23 +20,6 @@ $(function() {
 		}
 	})
 
-	/*
-	$('a.mark-paid').on('click', function(event)
-	{
-		event.preventDefault()
-		let member_id = $.trim($(this).data('member-id'))
-		$('#mark-paid-form').find('input[name="member_id"]').val(member_id)
-		$('#mark-paid-form').submit()
-	});
-
-	$('a.mark-unpaid').on('click', function(event)
-	{
-		event.preventDefault()
-		let action = $.trim($(this).data('action'))
-		$('#mark-unpaid-form').attr('action', action).submit()
-	});
-	*/
-
 	$('svg.mark-paid, svg.mark-unpaid').on('click', function()
 	{
 		$(this).addClass('d-none')
@@ -74,7 +57,24 @@ $(function() {
 	})
 
 	$('#search-members-form input[name="keywords"]').on('input', function() {
-		$.get($(this).closest('form').attr('action'), $(this).closest('form').serialize(), function(html) {
+		const forme = $(this).closest('form')
+
+		let new_keywords = $.trim($(this).val())
+
+		let old_keywords = forme.data('keywords')
+
+		if(typeof old_keywords !== typeof undefined)
+		{
+			old_keywords = $.trim(old_keywords)
+			if(new_keywords === old_keywords)
+				return
+		}
+		else if(new_keywords === '')
+			return
+
+		forme.data('keywords', new_keywords)
+
+		$.get(forme.attr('action'), { keywords: new_keywords }, function(html) {
 			$('#members-list').replaceWith(html);
 		}, 'html')
 	})

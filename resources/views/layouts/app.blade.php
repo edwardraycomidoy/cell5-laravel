@@ -40,9 +40,11 @@
 								<li class="nav-item">
 									<a class="nav-link" href="{{ route('collections.index') }}">Collections</a>
 								</li>
+								<?php /*
 								<li class="nav-item">
 									<a class="nav-link" href="{{ route('spreadsheet') }}">Spreadsheet</a>
 								</li>
+								*/ ?>
 							</ul>
 						@endauth
 

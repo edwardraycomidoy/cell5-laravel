@@ -12,8 +12,7 @@
 			<input type="text" name="keywords" placeholder="Search keywords..." value="{{ $keywords }}" autocomplete="off">
 		</form>
 
-		<x-members-list :members="$members" />
-
+		<x-members-list :members="$members" :collections="$collections" :payments="$payments" />
 	</div>
 </div>
 
