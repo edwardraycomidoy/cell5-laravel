@@ -6,12 +6,9 @@
 	<div class="col-lg">
 		<h2>Edit Collection</h2>
 			
-		<a href="{{ route('collections.show', $collection->id) }}">Back</a>
+		<a href="{{ route('collections.show', $collection->id) }}" class="btn btn-sm btn-success rounded-0">Back</a>
 
-		<br>
-		<br>
-
-		<table border="1" cellspacing="0" cellpadding="5">
+		<table class="table table-bordered table-striped table-sm w-auto mt-3">
 			<thead>
 				<tr>
 					<th>Member</th>
@@ -44,61 +41,113 @@
 			</tbody>
 		</table>
 
-		<br>
-		<br>
+		<div class="card rounded-0 mt-3 w-50">
+			<div class="card-body">
 
-		<form action="{{ route('collections.update', $collection->id) }}" method="post">
-			@csrf
-			@method('put')
-			<div>
-				<label>Member Name</label>
-				<select name="member_id">
-					<option value="">&nbsp;</option>
-					@foreach($members as $member)
-						<option value="{{ $member->id }}"{{ $member->id === $collection->member_id ? ' selected' : '' }}>{{ $member->last_name . ', ' . $member->first_name . (!is_null($member->suffix) ? ' ' . $member->suffix : '') . (!is_null($member->middle_initial) ? ' ' . $member->middle_initial . '.' : '') }}</option>
-					@endforeach
-				</select>
+				<form action="{{ route('collections.update', $collection->id) }}" method="post">
+					@csrf
+					@method('put')
+					<div class="form-group">
+						<label>Member Name</label>
+						<select name="member_id" class="form-control rounded-0">
+							<option value="">&nbsp;</option>
+							@foreach($members as $member)
+								<option value="{{ $member->id }}"{{ $member->id === $collection->member_id ? ' selected' : '' }}>{{ $member->last_name . ', ' . $member->first_name . (!is_null($member->suffix) ? ' ' . $member->suffix : '') . (!is_null($member->middle_initial) ? ' ' . $member->middle_initial . '.' : '') }}</option>
+							@endforeach
+						</select>
+
+						@error('member_id')
+							<div class="alert alert-sm alert-danger rounded-0 mt-2">{{ $message }}</div>
+						@enderror
+					</div>
+
+					<div class="form-group mb-0">
+						<label>Claimant</label>
+					</div>
+					<div class="form-check">
+						<input class="form-check-input" type="radio" name="claimant" id="claimant-member" value="0"{{ is_null($collection->claimant_id) ? ' checked' : '' }}>
+						<label class="form-check-label" for="claimant-member">Member</label>
+					</div>
+					<div class="form-check mb-3">
+						<input class="form-check-input" type="radio" name="claimant" id="claimant-beneficiary" value="1"{{ !is_null($collection->claimant_id) ? ' checked' : '' }}>
+						<label class="form-check-label" for="claimant-beneficiary">Beneficiary</label>
+					</div>
+
+					<div class="form-group">
+						<label>First Name</label>
+						<input
+							type="text"
+							class="form-control rounded-0"
+							name="first_name"
+							value="{{ !is_null($collection->claimant_id) ? $collection->claimant_first_name : '' }}"
+							{{ is_null($collection->claimant_id) ? 'disabled' : 'required' }}
+						>
+
+						@error('first_name')
+							<div class="alert alert-sm alert-danger rounded-0 mt-2">{{ $message }}</div>
+						@enderror
+					</div>
+					<div class="form-group">
+						<label>Middle Initial</label>
+						<input
+							type="text"
+							class="form-control rounded-0"
+							name="middle_initial"
+							value="{{ !is_null($collection->claimant_id) ? $collection->claimant_middle_initial : '' }}"
+							{{ is_null($collection->claimant_id) ? 'disabled' : '' }}
+						>
+
+						@error('middle_initial')
+							<div class="alert alert-sm alert-danger rounded-0 mt-2">{{ $message }}</div>
+						@enderror
+					</div>
+					<div class="form-group">
+						<label>Last Name</label>
+						<input
+							type="text"
+							class="form-control rounded-0"
+							name="last_name"
+							value="{{ !is_null($collection->claimant_id) ? $collection->claimant_last_name : '' }}"
+							{{ is_null($collection->claimant_id) ? 'disabled' : 'required' }}
+						>
+
+						@error('last_name')
+							<div class="alert alert-sm alert-danger rounded-0 mt-2">{{ $message }}</div>
+						@enderror
+					</div>
+					<div class="form-group">
+						<label>Suffix</label>
+						<input
+							type="text"
+							class="form-control rounded-0"
+							name="suffix"
+							value="{{ !is_null($collection->claimant_id) ? $collection->claimant_suffix : '' }}"
+							{{ is_null($collection->claimant_id) ? 'disabled' : '' }}
+						>
+
+						@error('suffix')
+							<div class="alert alert-sm alert-danger rounded-0 mt-2">{{ $message }}</div>
+						@enderror
+					</div>
+					<div class="form-group">
+						<label>Due on</label>
+						<input
+							type="text"
+							class="form-control rounded-0"
+							name="due_on"
+							value="{{ $collection->due_on }}"
+							required
+						>
+
+						@error('due_on')
+							<div class="alert alert-sm alert-danger rounded-0 mt-2">{{ $message }}</div>
+						@enderror
+					</div>
+					<button type="submit" class="btn btn-primary w-100 rounded-0 mt-3">Submit</button>
+				</form>
+
 			</div>
-			<br>
-			<div>
-				<label>Claimant</label>
-				<label>
-					<input type="radio" name="claimant" value="0"{{ is_null($collection->claimant_id) ? ' checked' : '' }}>
-					Member
-				</label>
-				<label>
-					<input type="radio" name="claimant" value="1"{{ !is_null($collection->claimant_id) ? ' checked' : '' }}>
-					Beneficiary
-				</label>
-			</div>
-			<br>
-			<div>
-				<label>First Name</label>
-				<input type="text" name="first_name"{{ is_null($collection->claimant_id) ? ' disabled' : '' }} value="{{ !is_null($collection->claimant_id) ? $collection->claimant_first_name : '' }}">
-			</div>
-			<br>
-			<div>
-				<label>Middle Initial</label>
-				<input type="text" name="middle_initial"{{ is_null($collection->claimant_id) ? ' disabled' : '' }} value="{{ !is_null($collection->claimant_id) ? $collection->claimant_middle_initial : '' }}">
-			</div>
-			<br>
-			<div>
-				<label>Last Name</label>
-				<input type="text" name="last_name"{{ is_null($collection->claimant_id) ? ' disabled' : '' }} value="{{ !is_null($collection->claimant_id) ? $collection->claimant_last_name : '' }}">
-			</div>
-			<br>
-			<div>
-				<label>Suffix</label>
-				<input type="text" name="suffix"{{ is_null($collection->claimant_id) ? ' disabled' : '' }} value="{{ !is_null($collection->claimant_id) ? $collection->claimant_suffix : '' }}">
-			</div>
-			<br>
-			<div>
-				<label>Due on</label>
-				<input type="text" name="due_on" value="{{ $collection->due_on }}">
-			</div>
-			<br>
-			<button type="submit">Submit</button>
-		</form>
+		</div>
 	</div>
 </div>
 

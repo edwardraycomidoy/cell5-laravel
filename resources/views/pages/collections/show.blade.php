@@ -6,13 +6,15 @@
 	<div class="col-lg">
 		<h2>Collection</h2>
 
-		<a href="{{ route('collections.index') }}">Back</a>
-		&nbsp;
-		&bull;
-		&nbsp;
-		<a href="{{ route('collections.edit', $collection->id) }}">Edit</a>
+		<a href="{{ route('collections.index') }}" class="btn btn-sm btn-success rounded-0">Back</a>
 
-		<table class="table table-bordered table-striped table-sm w-auto">
+		<a href="{{ route('collections.edit', $collection->id) }}" class="btn btn-sm btn-info rounded-0">Edit</a>
+
+		@if(session()->has('type') && session()->has('message'))
+			<div class="alert alert-{{ session('type') }} rounded-0 w-50 mt-3" role="alert">{{ session('message') }}</div>
+		@endif
+
+		<table class="table table-bordered table-striped table-sm w-auto mt-3">
 			<thead>
 				<tr>
 					<th>Member</th>
@@ -45,7 +47,7 @@
 			</tbody>
 		</table>
 
-		<table class="table table-bordered table-striped table-sm w-auto">
+		<table class="table table-bordered table-striped table-sm w-auto mt-3">
 			<thead>
 				<tr>
 					<th>Member</th>

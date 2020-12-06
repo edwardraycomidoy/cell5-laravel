@@ -6,14 +6,11 @@
 	<div class="col-lg">
 		<h2>Collections</h2>
 
-		<a href="{{ route('collections.create') }}">Create</a>
+		<a href="{{ route('collections.create') }}" class="btn btn-sm btn-success rounded-0">Create</a>
 
 		@if($collections->count() > 0)
 
-			<br>
-			<br>
-
-			<table class="table table-bordered table-striped table-sm w-auto">
+			<table class="table table-bordered table-striped table-sm w-auto mt-3">
 				<thead>
 					<tr>
 						<th>Member</th>

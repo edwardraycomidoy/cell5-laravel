@@ -15,6 +15,6 @@ class MembersTableSeeder extends Seeder
 	 */
 	public function run()
 	{
-		Member::factory(350)->create();
+		Member::factory(1000)->create();
 	}
 }

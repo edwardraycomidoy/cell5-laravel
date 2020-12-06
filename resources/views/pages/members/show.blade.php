@@ -5,17 +5,13 @@
 <div class="row">
 	<div class="col-lg">
 		<h2>{{ $member->first_name . ' ' . (!is_null($member->middle_initial) ? $member->middle_initial . '. ' : '') . $member->last_name . (!is_null($member->suffix) ? ' ' . $member->suffix : '') }}</h2>
-		<h4>Member</h4>
+		<h5 class="mb-3">Member</h5>
 
-		<a href="{{ $back_url }}">Back</a>
-		&nbsp;
-		&bull;
-		&nbsp;
-		<a href="{{ route('members.edit', $member) }}">Edit</a>
-		&nbsp;
-		&bull;
-		&nbsp;
-		<a href="javascript:void(0);" onclick="$('#delete-member').submit();">Delete</a>
+		<a href="{{ $back_url }}" class="btn btn-sm btn-success rounded-0">Back</a>
+
+		<a href="{{ route('members.edit', $member) }}" class="btn btn-sm btn-info rounded-0">Edit</a>
+
+		<a href="javascript:void(0);" class="btn btn-sm btn-danger rounded-0" onclick="$('#delete-member').submit();">Delete</a>
 		<form action="{{ route('members.destroy', $member) }}" method="post" id="delete-member">
 			@csrf
 			@method('delete')
