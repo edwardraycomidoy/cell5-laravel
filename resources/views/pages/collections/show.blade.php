@@ -11,7 +11,7 @@
 		<a href="{{ route('collections.edit', $collection->id) }}" class="btn btn-sm btn-info rounded-0">Edit</a>
 
 		@if(session()->has('type') && session()->has('message'))
-			<div class="alert alert-{{ session('type') }} rounded-0 w-50 mt-3" role="alert">{{ session('message') }}</div>
+			<div class="alert alert-{{ session('type') }} rounded-0 w-50 mt-3 mb-0" role="alert">{{ session('message') }}</div>
 		@endif
 
 		<table class="table table-bordered table-striped table-sm w-auto mt-3">

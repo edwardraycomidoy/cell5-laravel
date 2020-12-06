@@ -154,7 +154,7 @@ class MembersController extends Controller
 		$member->joined_on = date('Y-m-d', strtotime($request->joined_on));
 		$member->save();
 
-		return redirect()->route('members.show', ['member' => $member]);
+		return redirect()->route('members.show', ['member' => $member])->with(['type' => 'success', 'message' => 'Member added.']);
 	}
 
 	public function show($id)
@@ -235,7 +235,7 @@ class MembersController extends Controller
 		$member->joined_on = date('Y-m-d', strtotime($request->joined_on));
 		$member->save();
 
-		return redirect()->route('members.show', ['member' => $member]);
+		return redirect()->route('members.show', ['member' => $member])->with(['type' => 'success', 'message' => 'Member updated.']);
 	}
 
 	public function destroy($id)
@@ -248,6 +248,6 @@ class MembersController extends Controller
 		if(!is_null($member))
 			$member->delete();
 
-		return redirect()->route('members.index');
+		return redirect()->route('members.index')->with(['type' => 'success', 'message' => 'Member removed.']);
 	}
 }

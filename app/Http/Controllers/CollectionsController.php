@@ -83,7 +83,7 @@ class CollectionsController extends Controller
 
 		$collection->save();
 
-		return redirect()->route('collections.show', ['collection' => $collection])->with(['type' => 'success', 'message' => 'Collection successfully added.']);
+		return redirect()->route('collections.show', ['collection' => $collection])->with(['type' => 'success', 'message' => 'Collection added.']);
 	}
 
 	public function show($id)
@@ -206,11 +206,12 @@ class CollectionsController extends Controller
 		$collection->beneficiary_id = $beneficiary_id;
 		$collection->save();
 
-		return redirect()->route('collections.show', ['collection' => $id])->with(['type' => 'success', 'message' => 'Updates successful.']);
+		return redirect()->route('collections.show', ['collection' => $id])->with(['type' => 'success', 'message' => 'Collection updated.']);
 	}
 
 	public function destroy($id)
 	{
 		
+		return redirect()->route('collections.index')->with(['type' => 'success', 'message' => 'Collection removed.']);
 	}
 }

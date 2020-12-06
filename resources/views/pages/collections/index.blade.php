@@ -8,6 +8,10 @@
 
 		<a href="{{ route('collections.create') }}" class="btn btn-sm btn-success rounded-0">Create</a>
 
+		@if(session()->has('type') && session()->has('message'))
+			<div class="alert alert-{{ session('type') }} rounded-0 w-50 mt-3 mb-0" role="alert">{{ session('message') }}</div>
+		@endif
+
 		@if($collections->count() > 0)
 
 			<table class="table table-bordered table-striped table-sm w-auto mt-3">
