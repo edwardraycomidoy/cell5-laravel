@@ -15,6 +15,11 @@ class CollectionsController extends Controller
 {
 	private $regex = '/^[1-9]+\d*$/';
 
+	public function __construct()
+	{
+		$this->middleware(['auth']);
+	}
+
 	public function index()
 	{
 		$sql = '(SELECT `id` FROM `'. DB::getTablePrefix() . 'beneficiaries` WHERE `id` = `'. DB::getTablePrefix() . 'c`.`beneficiary_id` AND `deleted_at` IS NULL LIMIT 1)';
@@ -100,29 +105,23 @@ class CollectionsController extends Controller
 		if(is_null($collection))
 			return redirect()->route('collections.index');
 
-		$paid_members = DB::table('members AS m')
-						  ->select('m.id', 'm.first_name', 'm.middle_initial', 'm.last_name', 'm.suffix', 'p.id AS payment_id')
-						  ->join('payments AS p', 'p.member_id', '=', 'm.id')
-						  ->where('p.collection_id', '=', $id)
-						  ->whereNull('m.deleted_at')
-						  ->whereNull('p.deleted_at')
-						  ->orderBy('m.last_name', 'asc')
-						  ->orderBy('m.first_name', 'asc')
-						  ->orderBy('m.middle_initial', 'asc')
-						  ->get();
+		$sql = '(SELECT `id` FROM `'. DB::getTablePrefix() . 'payments` WHERE `member_id` = `'. DB::getTablePrefix() . 'm`.`id` AND `collection_id` = '. $id . ' AND `deleted_at` IS NULL ORDER BY `created_at` DESC LIMIT 1)';
 
-		$exclude_ids = array_map(function($row){ return $row->id; }, $paid_members->toArray());
+		$order = 'if(`'. DB::getTablePrefix() . "p`.`id` IS NOT NULL, true, false)";
 
-		$unpaid_members = DB::table('members')
-							->select('id', 'first_name', 'middle_initial', 'last_name', 'suffix')
-							->whereNotIn('id', $exclude_ids)
-							->whereNull('deleted_at')
-							->orderBy('last_name', 'asc')
-							->orderBy('first_name', 'asc')
-							->orderBy('middle_initial', 'asc')
-							->get();
+		$select = "{$order} AS `paid`";
 
-		return view('pages.collections.show', compact('collection', 'unpaid_members', 'paid_members'));
+		$members = DB::table('members AS m')
+					 ->select('m.id', 'm.first_name', 'm.middle_initial', 'm.last_name', 'm.suffix', DB::raw($select))
+					 ->leftJoin('payments AS p', 'p.id', '=', DB::raw($sql))
+					 ->whereNull('m.deleted_at')
+					 ->orderBy(DB::raw($order), 'asc')
+					 ->orderBy('m.last_name', 'asc')
+					 ->orderBy('m.first_name', 'asc')
+					 ->orderBy('m.middle_initial', 'asc')
+					 ->simplePaginate(20);
+
+		return view('pages.collections.show', compact('collection', 'members'));
 	}
 
 	public function edit($id)

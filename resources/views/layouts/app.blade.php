@@ -16,9 +16,8 @@
 				font-family: 'Nunito';
 			}
 
-			a {
-				color: rgb(0, 0, 238);
-				text-decoration: none;
+			.nav-link {
+				color: #fff !important;
 			}
 		</style>
 	</head>
@@ -33,16 +32,37 @@
 					</button>
 
 					<div class="collapse navbar-collapse" id="header-navbar">
-						<ul class="navbar-nav mr-auto">
-							<li class="nav-item">
-								<a class="nav-link" href="{{ route('members.index') }}">Members</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" href="{{ route('collections.index') }}">Collections</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" href="{{ route('spreadsheet') }}">Spreadsheet</a>
-							</li>
+						@auth
+							<ul class="navbar-nav mr-auto">
+								<li class="nav-item">
+									<a class="nav-link" href="{{ route('members.index') }}">Members</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" href="{{ route('collections.index') }}">Collections</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" href="{{ route('spreadsheet') }}">Spreadsheet</a>
+								</li>
+							</ul>
+						@endauth
+
+						<ul class="navbar-nav ml-auto">
+
+							@guest
+								<li class="nav-item">
+									<a class="nav-link" href="{{ route('login') }}">Login</a>
+								</li>
+							@endguest
+
+							@auth
+								<li class="nav-item">
+									<form action="{{ route('logout') }}" method="post">
+										@csrf
+									</form>
+									<a class="nav-link" href="javascript:void(0);" onclick="$(this).prev().submit()">Logout</a>
+								</li>
+							@endauth
+
 						</ul>
 					</div>
 				</nav>

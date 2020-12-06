@@ -12,7 +12,12 @@ class MembersController extends Controller
 {
 	private $regex = '/^[1-9]+\d*$/';
 
-	private $per_page = 25;
+	private $per_page = 20;
+
+	public function __construct()
+	{
+		$this->middleware(['auth']);
+	}
 
 	public function index(Request $request)
 	{
@@ -27,9 +32,8 @@ class MembersController extends Controller
 		{
 			$keywords = array_filter(explode(' ', $keywords), function($string){ return addslashes(trim($string)) != ''; });
 
-			$where = '';
-			foreach($keywords as $i => $keyword)
-				$where .= ($i > 0 ? ' AND ' : '') . "(last_name LIKE '{$keyword}%' OR first_name LIKE '{$keyword}%')";
+			$where = array_map(function($keyword){ return "(last_name LIKE '{$keyword}%' OR first_name LIKE '{$keyword}%')"; }, $keywords);
+			$where = implode(' AND ', $where);
 
 			$keywords = urlencode(implode(' ', $keywords));
 
@@ -58,12 +62,10 @@ class MembersController extends Controller
 
 		else
 		{
-			$keywords = explode(' ', $keywords);
-			$keywords = array_filter($keywords, function($string){ return addslashes(trim($string)) != ''; });
+			$keywords = array_filter(explode(' ', $keywords), function($string){ return addslashes(trim($string)) != ''; });
 
-			$where = '';
-			foreach($keywords as $i => $keyword)
-				$where .= ($i > 0 ? ' AND ' : '') . "(last_name LIKE '{$keyword}%' OR first_name LIKE '{$keyword}%')";
+			$where = array_map(function($keyword){ return "(last_name LIKE '{$keyword}%' OR first_name LIKE '{$keyword}%')"; }, $keywords);
+			$where = implode(' AND ', $where);
 
 			$route .= '?keywords=' . urlencode(implode(' ', $keywords));
 		}

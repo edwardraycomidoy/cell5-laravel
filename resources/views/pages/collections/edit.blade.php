@@ -4,7 +4,7 @@
 
 <div class="row">
 	<div class="col-lg">
-		<h1>Edit Collection</h1>
+		<h2>Edit Collection</h2>
 			
 		<a href="{{ route('collections.show', $collection->id) }}">Back</a>
 

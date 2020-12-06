@@ -4,8 +4,8 @@
 
 <div class="row">
 	<div class="col-lg">
-		<h1>{{ $member->first_name . ' ' . (!is_null($member->middle_initial) ? $member->middle_initial . '. ' : '') . $member->last_name . (!is_null($member->suffix) ? ' ' . $member->suffix : '') }}</h1>
-		<h3>Member</h3>
+		<h2>{{ $member->first_name . ' ' . (!is_null($member->middle_initial) ? $member->middle_initial . '. ' : '') . $member->last_name . (!is_null($member->suffix) ? ' ' . $member->suffix : '') }}</h2>
+		<h4>Member</h4>
 
 		<a href="{{ $back_url }}">Back</a>
 		&nbsp;
@@ -24,7 +24,7 @@
 		@if($collections->count() > 0)
 
 			<br>
-			<table border="1" cellspacing="0" cellpadding="5">
+			<table class="table table-bordered table-striped table-sm w-auto">
 				<thead>
 					<tr>
 						<th>&nbsp;</th>

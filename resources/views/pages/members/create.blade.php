@@ -5,7 +5,7 @@
 <div class="row">
 	<div class="col-lg">
 
-		<h1>Create Member</h1>
+		<h2>Create Member</h2>
 			
 		<a href="{{ route('members.index') }}">Back</a>
 

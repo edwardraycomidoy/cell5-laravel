@@ -12,6 +12,11 @@ class SpreadsheetController extends Controller
 {
 	private $per_page = 20;
 
+	public function __construct()
+	{
+		$this->middleware(['auth']);
+	}
+
 	public function index()
 	{
 		$members = Member::orderBy('last_name', 'asc')

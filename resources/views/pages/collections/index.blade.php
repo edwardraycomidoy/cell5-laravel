@@ -4,13 +4,16 @@
 
 <div class="row">
 	<div class="col-lg">
-		<h1>Collections</h1>
+		<h2>Collections</h2>
 
 		<a href="{{ route('collections.create') }}">Create</a>
 
 		@if($collections->count() > 0)
 
-			<table border="1" cellspacing="0" cellpadding="5">
+			<br>
+			<br>
+
+			<table class="table table-bordered table-striped table-sm w-auto">
 				<thead>
 					<tr>
 						<th>Member</th>

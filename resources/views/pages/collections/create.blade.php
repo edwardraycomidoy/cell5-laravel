@@ -4,7 +4,7 @@
 
 <div class="row">
 	<div class="col-lg">
-		<h1>Create Collection</h1>
+		<h2>Create Collection</h2>
 			
 		<a href="{{ route('collections.index') }}">Back</a>
 

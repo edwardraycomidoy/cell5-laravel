@@ -4,7 +4,7 @@
 
 <div class="row">
 	<div class="col-lg">
-		<h1>{{ $member->first_name . ' ' . (!is_null($member->middle_initial) ? $member->middle_initial . '. ' : '') . $member->last_name . (!is_null($member->suffix) ? ' ' . $member->suffix : '') }}</h1>
+		<h2>{{ $member->first_name . ' ' . (!is_null($member->middle_initial) ? $member->middle_initial . '. ' : '') . $member->last_name . (!is_null($member->suffix) ? ' ' . $member->suffix : '') }}</h2>
 		<h3>Member</h3>
 
 		<a href="{{ route('members.show', $member) }}">Back</a>

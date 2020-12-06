@@ -4,19 +4,15 @@
 
 <div class="row">
 	<div class="col-lg">
-		<h1>Collection</h1>
+		<h2>Collection</h2>
 
 		<a href="{{ route('collections.index') }}">Back</a>
 		&nbsp;
 		&bull;
 		&nbsp;
-
 		<a href="{{ route('collections.edit', $collection->id) }}">Edit</a>
 
-		<br>
-		<br>
-
-		<table border="1" cellspacing="0" cellpadding="5">
+		<table class="table table-bordered table-striped table-sm w-auto">
 			<thead>
 				<tr>
 					<th>Member</th>
@@ -49,78 +45,44 @@
 			</tbody>
 		</table>
 
-		<br>
-
-		<h2>Unpaid Members</h2>
-
-		@if($unpaid_members->count() > 0)
-
-			<table border="1" cellspacing="0" cellpadding="5">
-				<thead>
-					<tr>
-						<th>Member</th>
-						<th>&nbsp;</th>
-					</tr>
-				</thead>
-				<tbody>
-					@foreach($unpaid_members as $member)
-						<tr>
+		<table class="table table-bordered table-striped table-sm w-auto">
+			<thead>
+				<tr>
+					<th>Member</th>
+					<th>Paid</th>
+				</tr>
+			</thead>
+			<tbody>
+				@if($members->count() > 0)
+					@foreach($members as $member)
+						<tr data-member-id="{{ $member->id }}">
 							<td>
 								<a href="{{ route('members.show', $member->id) }}">{{ $member->last_name . ', ' . $member->first_name . (!is_null($member->suffix) ? ' ' . $member->suffix : '') . (!is_null($member->middle_initial) ? ' ' . $member->middle_initial . '.' : '') }}</a>
 							</td>
-							<td>
-								<a href="javascript:void(0);" class="mark-paid" data-member-id="{{ $member->id }}">Mark Paid</a>
+							<td class="text-center">
+
+								<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-square mark-paid @if((bool)$member->paid)d-none @endif" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style="cursor:pointer;">
+									<path fill-rule="evenodd" d="M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+								</svg>
+								<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-check-square mark-unpaid @if(!(bool)$member->paid)d-none @endif" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style="cursor:pointer;">
+									<path fill-rule="evenodd" d="M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+									<path fill-rule="evenodd" d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.236.236 0 0 1 .02-.022z"/>
+								</svg>
+
 							</td>
 						</tr>
 					@endforeach
-				</tbody>
-			</table>
-			<form action="{{ route('payments.store') }}" method="post" id="mark-paid-form">
-				@csrf
-				<input type="hidden" name="collection_id" value="{{ $collection->id }}">
-				<input type="hidden" name="member_id">
-			</form>
+				@endif
+			</tbody>
+		</table>
 
-		@else
+		<form action="{{ route('payments.store') }}" method="post" id="mark-paid-form">
+			@csrf
+			<input type="hidden" name="member_id">
+			<input type="hidden" name="collection_id" value="{{ $collection->id }}">
+		</form>
 
-		@endif
-
-		<br>
-
-		<h2>Paid Members</h2>
-
-		@if($paid_members->count() > 0)
-
-			<table border="1" cellspacing="0" cellpadding="5">
-				<thead>
-					<tr>
-						<th>Member</th>
-						<th>&nbsp;</th>
-						<th>&nbsp;</th>
-					</tr>
-				</thead>
-				<tbody>
-					@foreach($paid_members as $member)
-						<tr>
-							<td>
-								<a href="{{ route('members.show', $member->id) }}">{{ $member->last_name . ', ' . $member->first_name . (!is_null($member->suffix) ? ' ' . $member->suffix : '') . (!is_null($member->middle_initial) ? ' ' . $member->middle_initial . '.' : '') }}</a>
-							</td>
-							<td>pd.</td>
-							<td>
-								<a href="javascript:void(0);" class="mark-unpaid" data-action="{{ route('payments.destroy', $member->payment_id) }}">Mark Unpaid</a>
-							</td>
-						</tr>
-					@endforeach
-				</tbody>
-			</table>
-
-			<form method="post" id="mark-unpaid-form">
-				@csrf
-				@method('delete')
-			</form>
-		@else
-
-		@endif
+		{{ $members->links() }}
 	</div>
 </div>
 
