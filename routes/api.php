@@ -3,6 +3,9 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\Api\Auth\LoginController;
+use App\Http\Controllers\Api\Auth\LogoutController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,6 +17,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:sanctum')->get('/user', function(Request $request) {
+	$user = $request->user();
+	return [
+		'id' => $user->id,
+		'first_name' => $user->first_name,
+		'last_name' => $user->last_name,
+		'email' => $user->email
+	];
 });
+
+Route::post('/login', [LoginController::class, 'store']);
+
+Route::middleware('auth:sanctum')->delete('/logout', [LogoutController::class, 'destroy']);
+
+//Route::post('/logout', [LogoutController::class, 'store']);

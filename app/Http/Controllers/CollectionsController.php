@@ -211,7 +211,6 @@ class CollectionsController extends Controller
 
 	public function destroy($id)
 	{
-		
 		return redirect()->route('collections.index')->with(['type' => 'success', 'message' => 'Collection removed.']);
 	}
 }

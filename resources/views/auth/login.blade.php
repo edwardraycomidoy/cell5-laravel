@@ -15,7 +15,7 @@
 				<form action="{{ route('login') }}" method="post">
 					@csrf
 					<div class="form-group">
-						<label for="email">Email {{ old('email') }}</label>
+						<label for="email">Email</label>
 						<input type="email" class="form-control rounded-0" id="email" name="email" placeholder="Enter email" required @error('email') style="border-color:#dc3545" @enderror>
 
 						@error('email')
