@@ -41,7 +41,12 @@
 
 					<div class="form-group">
 						<label>First Name</label>
-						<input type="text" class="form-control rounded-0" name="first_name" disabled>
+						<input
+							type="text"
+							class="form-control rounded-0"
+							name="first_name"
+							disabled
+						>
 
 						@error('first_name')
 							<div class="alert alert-sm alert-danger rounded-0 mt-2">{{ $message }}</div>
@@ -49,7 +54,12 @@
 					</div>
 					<div class="form-group">
 						<label>Middle Initial</label>
-						<input type="text" class="form-control rounded-0" name="middle_initial" disabled>
+						<input
+							type="text"
+							class="form-control rounded-0"
+							name="middle_initial"
+							disabled
+						>
 
 						@error('middle_initial')
 							<div class="alert alert-sm alert-danger rounded-0 mt-2">{{ $message }}</div>
@@ -57,7 +67,12 @@
 					</div>
 					<div class="form-group">
 						<label>Last Name</label>
-						<input type="text" class="form-control rounded-0" name="last_name" disabled>
+						<input
+							type="text"
+							class="form-control rounded-0"
+							name="last_name"
+							disabled
+						>
 
 						@error('last_name')
 							<div class="alert alert-sm alert-danger rounded-0 mt-2">{{ $message }}</div>
@@ -65,7 +80,11 @@
 					</div>
 					<div class="form-group">
 						<label>Suffix</label>
-						<input type="text" class="form-control rounded-0" name="suffix" disabled>
+						<input
+							type="text"
+							class="form-control rounded-0"
+							name="suffix" disabled
+						>
 
 						@error('suffix')
 							<div class="alert alert-sm alert-danger rounded-0 mt-2">{{ $message }}</div>
@@ -73,7 +92,12 @@
 					</div>
 					<div class="form-group">
 						<label>Due on</label>
-						<input type="text" class="form-control rounded-0" name="due_on" value="{{ date('Y-m-d') }}">
+						<input
+							type="text"
+							class="form-control rounded-0 datepicker"
+							name="due_on"
+							value="{{ date('Y-m-d') }}"
+						>
 
 						@error('due_on')
 							<div class="alert alert-sm alert-danger rounded-0 mt-2">{{ $message }}</div>

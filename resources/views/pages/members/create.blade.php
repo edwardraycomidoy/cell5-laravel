@@ -71,7 +71,7 @@
 						<label>Joined on</label>
 						<input
 							type="text"
-							class="form-control rounded-0"
+							class="form-control rounded-0 datepicker"
 							name="joined_on"
 							value="{{ old('joined_on') }}"
 							required

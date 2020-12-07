@@ -133,7 +133,7 @@
 						<label>Due on</label>
 						<input
 							type="text"
-							class="form-control rounded-0"
+							class="form-control rounded-0 datepicker"
 							name="due_on"
 							value="{{ $collection->due_on }}"
 							required

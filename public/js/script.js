@@ -1,4 +1,10 @@
 $(function() {
+	$('.datepicker').prop('autocomplete', 'off').datepicker({
+		format: 'yyyy-mm-dd',
+		todayHighlight: true,
+		autoclose: true
+	});
+
 	$('input[type="radio"][name="claimant"]').on('change', function()
 	{
 		let value = parseInt($(this).val())
