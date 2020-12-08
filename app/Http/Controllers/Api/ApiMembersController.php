@@ -40,7 +40,6 @@ class ApiMembersController extends Controller
 						 ->orderBy('last_name', 'asc')
 						 ->orderBy('first_name', 'asc')
 						 ->orderBy('middle_initial', 'asc')
-						 //->simplePaginate($this->per_page);
 						 ->paginate($this->per_page);
 
 		$members->setPath($route);
