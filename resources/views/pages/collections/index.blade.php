@@ -52,6 +52,7 @@
 					@endforeach
 				</tbody>
 			</table>
+			{{ $collections->links() }}
 
 		@endif
 

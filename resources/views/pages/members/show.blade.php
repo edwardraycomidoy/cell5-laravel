@@ -23,8 +23,7 @@
 
 		@if($collections->count() > 0)
 
-			<br>
-			<table class="table table-bordered table-striped table-sm w-auto">
+			<table class="table table-bordered table-striped table-sm w-auto mt-3">
 				<thead>
 					<tr>
 						<th>&nbsp;</th>
@@ -51,7 +50,7 @@
 								@if(!is_null($collection->claimant_id))
 									<a href="{{ route('members.show', $collection->member_id) }}">{{ $collection->member_last_name . ', ' . $collection->member_first_name . (!is_null($collection->member_suffix) ? ' ' . $collection->member_suffix : '') . (!is_null($collection->member_middle_initial) ? ' ' . $collection->member_middle_initial . '.' : '') }}</a>
 								@else
-									<em>Same as claimant</em>
+									<em>Claimant</em>
 								@endif
 							</td>
 							<td>{{ $collection->due_on }}</td>

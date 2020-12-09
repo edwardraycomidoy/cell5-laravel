@@ -31,7 +31,7 @@ class CollectionsController extends Controller
 						 ->whereNull('c.deleted_at')
 						 ->whereNull('m.deleted_at')
 						 ->orderBy('c.due_on', 'desc')
-						 ->simplePaginate(25);
+						 ->simplePaginate(20);
 		return view('pages.collections.index', compact('collections'));
 	}
 

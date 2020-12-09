@@ -12,7 +12,7 @@ class MembersController extends Controller
 {
 	private $regex = '/^[1-9]+\d*$/';
 
-	private $per_page = 18;
+	private $per_page = 20;
 
 	public function __construct()
 	{

@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use DB;
+
 class ApiCollectionsController extends Controller
 {
 	private $regex = '/^[1-9]+\d*$/';
 
-	private $per_page = 18;
+	private $per_page = 20;
 
 	public function index()
 	{
@@ -22,7 +24,7 @@ class ApiCollectionsController extends Controller
 						 ->whereNull('c.deleted_at')
 						 ->whereNull('m.deleted_at')
 						 ->orderBy('c.due_on', 'desc')
-						 ->simplePaginate(25);
+						 ->paginate($this->per_page);
 
 		return response()->json(['collections' => $collections]);
 	}
