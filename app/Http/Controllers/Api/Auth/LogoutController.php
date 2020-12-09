@@ -11,6 +11,6 @@ class LogoutController extends Controller
 	public function destroy(Request $request)
 	{
 		$request->user()->currentAccessToken()->delete();
-		return response()->json('logout', 200);
+		return response()->json([]);
 	}
 }

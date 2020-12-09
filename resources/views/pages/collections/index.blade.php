@@ -6,7 +6,7 @@
 	<div class="col-lg">
 		<h2>Collections</h2>
 
-		<a href="{{ route('collections.create') }}" class="btn btn-sm btn-success rounded-0">Create</a>
+		<a href="{{ route('collections.create') }}" class="btn btn-sm btn-success rounded-0">Add</a>
 
 		@if(session()->has('type') && session()->has('message'))
 			<div class="alert alert-{{ session('type') }} rounded-0 w-50 mt-3 mb-0" role="alert">{{ session('message') }}</div>

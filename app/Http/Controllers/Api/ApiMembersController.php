@@ -118,4 +118,57 @@ class ApiMembersController extends Controller
 			'current_page' => $current_page
 		]);
 	}
+
+	public function store(Request $request)
+	{
+		$this->validate($request, [
+			'first_name' => 'required|max:255',
+			'middle_initial' => 'nullable|max:1',
+			'last_name' => 'required|max:255',
+			'suffix' => 'nullable|max:5',
+			'joined_on' => 'required|date'
+		]);
+
+		$member = new Member;
+		$member->first_name = $request->first_name;
+		$member->middle_initial = $request->middle_initial;
+		$member->last_name = $request->last_name;
+		$member->suffix = $request->suffix;
+		$member->joined_on = date('Y-m-d', strtotime($request->joined_on));
+		$member->save();
+
+		return response()->json([
+			'id' => $member->id,
+			'type' => 'success',
+			'message' => 'Member added.'
+		]);
+	}
+
+	public function update(Request $request, $id)
+	{
+		$this->validate($request, [
+			'first_name' => 'required|max:255',
+			'middle_initial' => 'nullable|max:1',
+			'last_name' => 'required|max:255',
+			'suffix' => 'nullable|max:5',
+			'joined_on' => 'required|date'
+		]);
+
+		$member = Member::find($id);
+
+		if(is_null($member))
+			return redirect()->route('members.index');
+
+		$member->first_name = $request->first_name;
+		$member->middle_initial = $request->middle_initial;
+		$member->last_name = $request->last_name;
+		$member->suffix = $request->suffix;
+		$member->joined_on = date('Y-m-d', strtotime($request->joined_on));
+		$member->save();
+
+		return response()->json([
+			'type' => 'success',
+			'message' => 'Member updated.'
+		]);
+	}
 }
