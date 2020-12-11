@@ -130,7 +130,11 @@ class ApiMembersController extends Controller
 	{
 		$this->validate($request, $this->validation_rules);
 		$member = Member::create($request->all());
-		return response()->json(['id' => $member->id, 'type' => 'success', 'message' => 'Member added.']);
+		return response()->json([
+			'id' => $member->id,
+			'type' => 'success',
+			'message' => 'Member added.'
+		]);
 	}
 
 	public function update(Request $request, $id)
@@ -140,7 +144,7 @@ class ApiMembersController extends Controller
 		if(is_null($member))
 		{
 			return response()->json([
-				'class' => 'success',
+				'class' => 'danger',
 				'message' => 'Member not found.'
 			]);
 		}

@@ -14,6 +14,14 @@ class MembersController extends Controller
 
 	private $per_page = 20;
 
+	private $validation_rules = [
+		'first_name' => 'required|max:255',
+		'middle_initial' => 'nullable|max:1',
+		'last_name' => 'required|max:255',
+		'suffix' => 'nullable|max:5',
+		'joined_on' => 'required|date'
+	];
+
 	public function __construct()
 	{
 		$this->middleware(['auth']);
@@ -138,23 +146,12 @@ class MembersController extends Controller
 
 	public function store(Request $request)
 	{
-		$this->validate($request, [
-			'first_name' => 'required|max:255',
-			'middle_initial' => 'nullable|max:1',
-			'last_name' => 'required|max:255',
-			'suffix' => 'nullable|max:5',
-			'joined_on' => 'required|date'
+		$this->validate($request, $this->validation_rules);
+		$member = Member::create($request->all());
+		return redirect()->route('members.show', ['member' => $member])->with([
+			'type' => 'success',
+			'message' => 'Member added.'
 		]);
-
-		$member = new Member;
-		$member->first_name = $request->first_name;
-		$member->middle_initial = $request->middle_initial;
-		$member->last_name = $request->last_name;
-		$member->suffix = $request->suffix;
-		$member->joined_on = date('Y-m-d', strtotime($request->joined_on));
-		$member->save();
-
-		return redirect()->route('members.show', ['member' => $member])->with(['type' => 'success', 'message' => 'Member added.']);
 	}
 
 	public function show($id)
@@ -163,7 +160,6 @@ class MembersController extends Controller
 			return redirect()->route('members.index');
 
 		$member = Member::find($id);
-
 		if(is_null($member))
 			return redirect()->route('members.index');
 
@@ -193,7 +189,6 @@ class MembersController extends Controller
 		$array = array_flip($array);
 
 		$page = floor($array[$id] / $this->per_page) + 1;
-
 		if($page > 1)
 			$back_url .= "?page={$page}";
 
@@ -206,7 +201,6 @@ class MembersController extends Controller
 			return redirect()->route('members.index');
 
 		$member = Member::find($id);
-
 		if(is_null($member))
 			return redirect()->route('members.index');
 
@@ -215,27 +209,17 @@ class MembersController extends Controller
 
 	public function update(Request $request, $id)
 	{
-		$this->validate($request, [
-			'first_name' => 'required|max:255',
-			'middle_initial' => 'nullable|max:1',
-			'last_name' => 'required|max:255',
-			'suffix' => 'nullable|max:5',
-			'joined_on' => 'required|date'
-		]);
+		$this->validate($request, $this->validation_rules);
 
 		$member = Member::find($id);
-
 		if(is_null($member))
 			return redirect()->route('members.index');
 
-		$member->first_name = $request->first_name;
-		$member->middle_initial = $request->middle_initial;
-		$member->last_name = $request->last_name;
-		$member->suffix = $request->suffix;
-		$member->joined_on = date('Y-m-d', strtotime($request->joined_on));
-		$member->save();
-
-		return redirect()->route('members.show', ['member' => $member])->with(['type' => 'success', 'message' => 'Member updated.']);
+		$member->update($request->all());
+		return redirect()->route('members.show', ['member' => $member])->with([
+			'type' => 'success',
+			'message' => 'Member updated.'
+		]);
 	}
 
 	public function destroy($id)
@@ -244,10 +228,12 @@ class MembersController extends Controller
 			return redirect()->route('members.index');
 
 		$member = Member::find($id);
-
 		if(!is_null($member))
 			$member->delete();
 
-		return redirect()->route('members.index')->with(['type' => 'success', 'message' => 'Member removed.']);
+		return redirect()->route('members.index')->with([
+			'type' => 'success',
+			'message' => 'Member removed.'
+		]);
 	}
 }

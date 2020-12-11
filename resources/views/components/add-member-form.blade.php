@@ -58,8 +58,8 @@
 			<div class="form-group">
 				<label>Joined on</label>
 				<input
-					type="text"
-					class="form-control rounded-0 datepicker"
+					type="date"
+					class="form-control rounded-0"
 					name="joined_on"
 					value="{{ !is_null(old('joined_on')) ? old('joined_on') : (isset($member) ? $member->joined_on : '') }}"
 					required

@@ -6,7 +6,7 @@
 				@method('put')
 			@endif
 			<div class="form-group">
-				<label>Member Name</label>
+				<label>Member</label>
 				<select name="member_id" class="form-control rounded-0">
 					<option value="">&nbsp;</option>
 					@foreach($members as $member)
@@ -84,8 +84,8 @@
 			<div class="form-group">
 				<label>Due on</label>
 				<input
-					type="text"
-					class="form-control rounded-0 datepicker"
+					type="date"
+					class="form-control rounded-0"
 					name="due_on"
 					value="{{ isset($collection) ? $collection->due_on : date('Y-m-d') }}"
 				>

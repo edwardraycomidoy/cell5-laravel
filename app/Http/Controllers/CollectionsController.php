@@ -8,12 +8,24 @@ use App\Models\Member;
 use App\Models\Collection;
 use App\Models\Beneficiary;
 
-use Carbon\Carbon;
 use DB;
 
 class CollectionsController extends Controller
 {
 	private $regex = '/^[1-9]+\d*$/';
+
+	private $validation_rules_1 = [
+		'member_id' => 'required',
+		'claimant' => 'required|in:0,1',
+		'due_on' => 'required|date'
+	];
+
+	private $validation_rules_2 = [
+		'first_name' => 'required|max:255',
+		'middle_initial' => 'nullable|max:1',
+		'last_name' => 'required|max:255',
+		'suffix' => 'nullable|max:5'
+	];
 
 	public function __construct()
 	{
@@ -46,42 +58,29 @@ class CollectionsController extends Controller
 
 	public function store(Request $request)
 	{
-		$this->validate($request, [
-			'member_id' => 'required',
-			'claimant' => 'required|in:0,1',
-			'due_on' => 'required|date'
-		]);
+		$this->validate($request, $this->validation_rules_1);
 
-		$current_time = Carbon::now()->toDateTimeString();
-
-		$collection = new Collection;
-		$collection->member_id = (int)$request->member_id;
-		$collection->due_on = date('Y-m-d', strtotime($request->due_on));
-		$collection->created_at = $current_time;
-		$collection->updated_at = $current_time;
+		$beneficiary_id = null;
 
 		if((int)$request->claimant == 1)
 		{
-			$this->validate($request, [
-				'first_name' => 'required|max:255',
-				'middle_initial' => 'nullable|max:1',
-				'last_name' => 'required|max:255',
-				'suffix' => 'nullable|max:5'
+			$this->validate($request, $this->validation_rules_2);
+
+			$beneficiary = Beneficiary::create([
+				'first_name' => $request->first_name,
+				'middle_initial' => $request->middle_initial,
+				'last_name' => $request->last_name,
+				'suffix' => $request->suffix
 			]);
 
-			$beneficiary = new Beneficiary;
-			$beneficiary->first_name = $request->first_name;
-			$beneficiary->middle_initial = $request->middle_initial;
-			$beneficiary->last_name = $request->last_name;
-			$beneficiary->suffix = $request->suffix;
-			$beneficiary->created_at = $current_time;
-			$beneficiary->updated_at = $current_time;
-			$beneficiary->save();
-
-			$collection->beneficiary_id = $beneficiary->id;
+			$beneficiary_id = $beneficiary->id;
 		}
 
-		$collection->save();
+		$collection = Collection::create([
+			'member_id' => (int)$request->member_id,
+			'beneficiary_id' => $beneficiary_id,
+			'due_on' => $request->due_on
+		]);
 
 		return redirect()->route('collections.show', ['collection' => $collection])->with(['type' => 'success', 'message' => 'Collection added.']);
 	}
@@ -155,10 +154,12 @@ class CollectionsController extends Controller
 		if(preg_match($this->regex, $id) == 0)
 			return redirect()->route('collections.index');
 
+		$this->validate($request, $this->validation_rules_1);
+
 		$sql = '(SELECT `id` FROM `'. DB::getTablePrefix() . 'beneficiaries` WHERE `id` = `'. DB::getTablePrefix() . 'c`.`beneficiary_id` AND `deleted_at` IS NULL LIMIT 1)';
 
 		$collection = DB::table('collections AS c')
-						->select('c.id', 'c.member_id', 'm.first_name AS member_first_name', 'm.middle_initial AS member_middle_initial', 'm.last_name AS member_last_name', 'm.suffix AS member_suffix', 'b.id AS claimant_id', 'b.first_name AS claimant_first_name', 'b.middle_initial AS claimant_middle_initial', 'b.last_name AS claimant_last_name', 'b.suffix AS claimant_suffix', 'c.due_on', 'c.released_on')
+						->select('b.id AS beneficiary_id')
 						->join('members AS m', 'm.id', '=', 'c.member_id')
 						->leftJoin('beneficiaries AS b', 'b.id', '=', DB::raw($sql))
 						->where('c.id', '=', $id)
@@ -169,48 +170,50 @@ class CollectionsController extends Controller
 		if(is_null($collection))
 			return redirect()->route('collections.index');
 
-		$current_time = Carbon::now()->toDateTimeString();
-
-		$collection = Collection::find($id);
-		$collection->member_id = (int)$request->member_id;
-		$collection->due_on = date('Y-m-d', strtotime($request->due_on));
-		$collection->updated_at = $current_time;
-
 		$beneficiary_id = null;
 
 		if((int)$request->claimant == 1)
 		{
-			$this->validate($request, [
-				'first_name' => 'required|max:255',
-				'middle_initial' => 'nullable|max:1',
-				'last_name' => 'required|max:255',
-				'suffix' => 'nullable|max:5'
-			]);
+			$this->validate($request, $this->validation_rules_2);
 
-			$beneficiary = is_null($collection->beneficiary_id) ? new Beneficiary : Beneficiary::find($collection->beneficiary_id);
+			$data = [
+				'first_name' => $request->first_name,
+				'middle_initial' => $request->middle_initial,
+				'last_name' => $request->last_name,
+				'suffix' => $request->suffix
+			];
 
-			$beneficiary->first_name = $request->first_name;
-			$beneficiary->middle_initial = $request->middle_initial;
-			$beneficiary->last_name = $request->last_name;
-			$beneficiary->suffix = $request->suffix;
-			$beneficiary->updated_at = $current_time;
-
-			if(is_null($collection->beneficiary_id))
-				$beneficiary->created_at = $current_time;
-
-			$beneficiary->save();
-
-			$beneficiary_id = is_null($collection->beneficiary_id) ? $beneficiary->id : $collection->beneficiary_id;
+			if(!is_null($collection->beneficiary_id))
+			{
+				$beneficiary_id = $collection->beneficiary_id;
+				Beneficiary::find($beneficiary_id)->update($data);
+			}
+			else
+			{
+				$beneficiary = Beneficiary::create($data);
+				$beneficiary_id = $beneficiary->id;
+			}
 		}
+		elseif(!is_null($collection->beneficiary_id))
+			Beneficiary::find($collection->beneficiary_id)->delete();
 
-		$collection->beneficiary_id = $beneficiary_id;
-		$collection->save();
+		$collection = Collection::find($id)->update([
+			'member_id' => (int)$request->member_id,
+			'beneficiary_id' => $beneficiary_id,
+			'due_on' => $request->due_on
+		]);
 
-		return redirect()->route('collections.show', ['collection' => $id])->with(['type' => 'success', 'message' => 'Collection updated.']);
+		return redirect()->route('collections.show', ['collection' => $collection])->with([
+			'type' => 'success',
+			'message' => 'Collection updated.'
+		]);
 	}
 
 	public function destroy($id)
 	{
-		return redirect()->route('collections.index')->with(['type' => 'success', 'message' => 'Collection removed.']);
+		return redirect()->route('collections.index')->with([
+			'type' => 'success',
+			'message' => 'Collection removed.'
+		]);
 	}
 }
