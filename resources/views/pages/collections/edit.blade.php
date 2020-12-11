@@ -6,7 +6,7 @@
 	<div class="col-lg-12">
 		<h2>Edit Collection</h2>
 		<a href="{{ route('collections.show', $collection->id) }}" class="btn btn-sm btn-success rounded-0">Back</a>
-		<table class="table table-bordered table-striped table-sm w-auto mt-3">
+		<table class="table table-bordered table-striped table-sm w-auto mt-3 mb-0">
 			<thead>
 				<tr>
 					<th>Member</th>

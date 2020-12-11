@@ -137,7 +137,7 @@ class ApiCollectionsController extends Controller
 		$sql = '(SELECT `id` FROM `'. DB::getTablePrefix() . 'beneficiaries` WHERE `id` = `'. DB::getTablePrefix() . 'c`.`beneficiary_id` AND `deleted_at` IS NULL LIMIT 1)';
 
 		$collection = DB::table('collections AS c')
-						->select('c.id', 'c.member_id', 'm.first_name AS member_first_name', 'm.middle_initial AS member_middle_initial', 'm.last_name AS member_last_name', 'm.suffix AS member_suffix', 'c.beneficiary_id AS claimant_id', 'b.first_name AS claimant_first_name', 'b.middle_initial AS claimant_middle_initial', 'b.last_name AS claimant_last_name', 'b.suffix AS claimant_suffix', 'c.due_on', 'c.released_on')
+						->select('c.member_id', 'm.first_name AS member_first_name', 'm.middle_initial AS member_middle_initial', 'm.last_name AS member_last_name', 'm.suffix AS member_suffix', 'b.id AS claimant_id', 'b.first_name AS claimant_first_name', 'b.middle_initial AS claimant_middle_initial', 'b.last_name AS claimant_last_name', 'b.suffix AS claimant_suffix', 'c.due_on', 'c.released_on')
 						->join('members AS m', 'm.id', '=', 'c.member_id')
 						->leftJoin('beneficiaries AS b', 'b.id', '=', DB::raw($sql))
 						->where('c.id', '=', $id)
@@ -167,7 +167,7 @@ class ApiCollectionsController extends Controller
 		$sql = '(SELECT `id` FROM `'. DB::getTablePrefix() . 'beneficiaries` WHERE `id` = `'. DB::getTablePrefix() . 'c`.`beneficiary_id` AND `deleted_at` IS NULL LIMIT 1)';
 
 		$collection = DB::table('collections AS c')
-						->select('c.id', 'c.member_id', 'm.first_name AS member_first_name', 'm.middle_initial AS member_middle_initial', 'm.last_name AS member_last_name', 'm.suffix AS member_suffix', 'c.beneficiary_id', 'b.first_name AS claimant_first_name', 'b.middle_initial AS claimant_middle_initial', 'b.last_name AS claimant_last_name', 'b.suffix AS claimant_suffix', 'c.due_on', 'c.released_on')
+						->select('c.beneficiary_id')
 						->join('members AS m', 'm.id', '=', 'c.member_id')
 						->leftJoin('beneficiaries AS b', 'b.id', '=', DB::raw($sql))
 						->where('c.id', '=', $id)
@@ -218,7 +218,17 @@ class ApiCollectionsController extends Controller
 			'due_on' => $request->due_on
 		]);
 
+		$collection = DB::table('collections AS c')
+						->select('c.member_id', 'm.first_name AS member_first_name', 'm.middle_initial AS member_middle_initial', 'm.last_name AS member_last_name', 'm.suffix AS member_suffix', 'b.id AS claimant_id', 'b.first_name AS claimant_first_name', 'b.middle_initial AS claimant_middle_initial', 'b.last_name AS claimant_last_name', 'b.suffix AS claimant_suffix', 'c.due_on', 'c.released_on')
+						->join('members AS m', 'm.id', '=', 'c.member_id')
+						->leftJoin('beneficiaries AS b', 'b.id', '=', DB::raw($sql))
+						->where('c.id', '=', $id)
+						->whereNull('c.deleted_at')
+						->whereNull('m.deleted_at')
+						->first();
+
 		return response()->json([
+			'collection' => $collection,
 			'class' => 'success',
 			'message' => 'Collection updated.'
 		]);
