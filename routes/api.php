@@ -43,5 +43,7 @@ Route::middleware('auth:sanctum')->group(function() {
 
 	Route::resource('collections', ApiCollectionsController::class, ['as' => 'api']);
 
-	Route::resource('payments', ApiPaymentsController::class, ['as' => 'api'])->only(['store', 'destroy']);
+	Route::delete('payments', [ApiPaymentsController::class, 'destroy']);
+
+	Route::resource('payments', ApiPaymentsController::class, ['as' => 'api'])->only('store');
 });

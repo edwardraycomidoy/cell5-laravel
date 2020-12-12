@@ -6,8 +6,6 @@ use Illuminate\Http\Request;
 
 use App\Models\Payment;
 
-use Carbon\Carbon;
-
 class PaymentsController extends Controller
 {
 	private $regex = '/^[1-9]+\d*$/';
@@ -25,19 +23,17 @@ class PaymentsController extends Controller
 			die;
 		}
 
-		$current_time = Carbon::now()->toDateTimeString();
-
-		$payment = Payment::where('member_id', $request->member_id)->where('collection_id', $request->collection_id)->first();
+		$payment = Payment::where('member_id', $request->member_id)
+						  ->where('collection_id', $request->collection_id)
+						  ->first();
 		if(is_null($payment))
 		{
-			$payment = new Payment;
-			$payment->member_id = $request->member_id;
-			$payment->collection_id = $request->collection_id;
-			$payment->amount = 150;
-			$payment->created_at = $current_time;
+			$payment = Payment::create([
+				'member_id' => $request->member_id,
+				'collection_id' => $request->collection_id,
+				'amount' => 150
+			]);
 		}
-		$payment->updated_at = $current_time;
-        $payment->save();
 
 		echo json_encode([]);
 	}

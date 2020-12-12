@@ -71,12 +71,17 @@ class ApiMembersController extends Controller
 		{
 			$sql = '(SELECT `id` FROM `'. DB::getTablePrefix() . 'payments` WHERE `member_id` = ' . $member->id . ' AND `collection_id` = `'. DB::getTablePrefix() . 'c`.`id` AND `deleted_at` IS NULL ORDER BY `created_at` DESC LIMIT 1)';
 
-			$payments[$member->id] = DB::table('collections AS c')
-									   ->select('c.id AS collection_id', 'p.id AS payment_id', 'c.due_on')
-									   ->leftJoin('payments AS p', 'p.id', '=', DB::raw($sql))
-									   ->whereNull('c.deleted_at')
-									   ->orderBy('c.due_on', 'asc')
-									   ->get();
+			$payments[$member->id] = [];
+
+			$temp_payments = DB::table('collections AS c')
+							   ->select('c.id', 'p.id AS payment_id')
+							   ->leftJoin('payments AS p', 'p.id', '=', DB::raw($sql))
+							   ->whereNull('c.deleted_at')
+							   ->orderBy('c.due_on', 'asc')
+							   ->get();
+
+			foreach($temp_payments as $row)
+				$payments[$member->id][$row->id] = !is_null($row->payment_id);
 		}
 
 		return response()->json([
