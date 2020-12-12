@@ -25,30 +25,26 @@ $(function() {
 		$(this).addClass('d-none')
 		$(this).siblings('svg').removeClass('d-none')
 
-		if($(this).hasClass('mark-paid'))
-		{
-			let collection_id = $(this).closest('td').data('collection-id')
-			if(typeof collection_id === typeof undefined)
-				collection_id = $(this).closest('tr').data('collection-id')
+		if(!$(this).hasClass('mark-paid') && !$(this).hasClass('mark-unpaid'))
+			return
 
-			let member_id = $(this).closest('td').data('member-id')
-			if(typeof member_id === typeof undefined)
-				member_id = $(this).closest('tr').data('member-id')
+		let collection_id = $(this).closest('td').data('collection-id')
+		if(typeof collection_id === typeof undefined)
+			collection_id = $(this).closest('tr').data('collection-id')
 
-			if(typeof collection_id !== typeof undefined)
-				$('#mark-paid-form').find('input[name="collection_id"]').val($.trim(collection_id))
+		let member_id = $(this).closest('td').data('member-id')
+		if(typeof member_id === typeof undefined)
+			member_id = $(this).closest('tr').data('member-id')
 
-			if(typeof member_id !== typeof undefined)
-				$('#mark-paid-form').find('input[name="member_id"]').val($.trim(member_id))
+		let form_id = '#mark-' + ($(this).hasClass('mark-unpaid')? 'un' : '') + 'paid-form'
 
-			$('#mark-paid-form').submit()
-		}
-		else
-		{
-			//$(this).closest('tr').removeData('collection-id')
-			//$('#mark-unpaid-form').attr('action')
-			//$('#mark-unpaid-form').submit()
-		}
+		if(typeof collection_id !== typeof undefined)
+			$(form_id).find('input[name="collection_id"]').val($.trim(collection_id))
+
+		if(typeof member_id !== typeof undefined)
+			$(form_id).find('input[name="member_id"]').val($.trim(member_id))
+
+		$(form_id).submit()
 	})
 
 	$('#mark-paid-form, #mark-unpaid-form').on('submit', function(event) {

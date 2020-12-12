@@ -121,11 +121,29 @@ class ApiCollectionsController extends Controller
 					 ->orderBy('m.last_name', 'asc')
 					 ->orderBy('m.first_name', 'asc')
 					 ->orderBy('m.middle_initial', 'asc')
-					 ->paginate(20);
+					 ->paginate($this->per_page);
+
+		$payments = [];
+
+		foreach($members as $member)
+		{
+			$sql = '(SELECT `id` FROM `'. DB::getTablePrefix() . 'payments` WHERE `member_id` = ' . $member->id . ' AND `collection_id` = `' . DB::getTablePrefix() . 'c`.`id` AND `deleted_at` IS NULL ORDER BY `created_at` DESC LIMIT 1)';
+
+			$payment = DB::table('collections AS c')
+						 ->select('c.id', 'p.id AS payment_id')
+						 ->leftJoin('payments AS p', 'p.id', '=', DB::raw($sql))
+						 ->where('c.id', '=', $id)
+						 ->whereNull('c.deleted_at')
+						 ->orderBy('c.due_on', 'asc')
+						 ->first();
+
+			$payments[$member->id] = !is_null($payment->payment_id);
+		}
 
 		return response()->json([
 			'collection' => $collection,
-			'members' => $members
+			'members' => $members,
+			'payments' => $payments
 		]);
 	}
 

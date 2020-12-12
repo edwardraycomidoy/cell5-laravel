@@ -38,12 +38,10 @@ Route::middleware('auth:sanctum')->group(function() {
 	Route::delete('/logout', [LogoutController::class, 'destroy']);
 
 	Route::get('/members/search', [ApiMembersController::class, 'search']);
-
 	Route::resource('members', ApiMembersController::class, ['as' => 'api']);
 
 	Route::resource('collections', ApiCollectionsController::class, ['as' => 'api']);
 
 	Route::delete('payments', [ApiPaymentsController::class, 'destroy']);
-
 	Route::resource('payments', ApiPaymentsController::class, ['as' => 'api'])->only('store');
 });

@@ -73,12 +73,12 @@
 				<input type="hidden" name="member_id" value="{{ $member->id }}">
 				<input type="hidden" name="collection_id">
 			</form>
-
-			<form method="post" id="mark-unpaid-form">
+			<form action="{{ route('payments.destroy') }}" method="post" id="mark-unpaid-form">
 				@csrf
 				@method('delete')
+				<input type="hidden" name="member_id" value="{{ $member->id }}">
+				<input type="hidden" name="collection_id">
 			</form>
-
 		@endif
 	</div>
 </div>

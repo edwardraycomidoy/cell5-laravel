@@ -120,6 +120,23 @@ class ApiMembersController extends Controller
 						 ->orderBy('middle_initial', 'asc')
 						 ->get(['id']);
 
+		$payments = [];
+
+		foreach($collections as $collection)
+		{
+			$sql = '(SELECT `id` FROM `'. DB::getTablePrefix() . 'payments` WHERE `member_id` = ' . $id . ' AND `collection_id` = `' . DB::getTablePrefix() . 'c`.`id` AND `deleted_at` IS NULL ORDER BY `created_at` DESC LIMIT 1)';
+
+			$payment = DB::table('collections AS c')
+						 ->select('c.id AS collection_id', 'p.id AS payment_id')
+						 ->leftJoin('payments AS p', 'p.id', '=', DB::raw($sql))
+						 ->where('c.id', '=', $collection->id)
+						 ->whereNull('c.deleted_at')
+						 ->orderBy('c.due_on', 'asc')
+						 ->first();
+
+			$payments[$collection->id] = !is_null($payment->payment_id);
+		}
+
 		$array = array_map(function($member){ return $member['id']; }, $members->toArray());
 		$array = array_flip($array);
 		$current_page = floor($array[$id] / $this->per_page) + 1;
@@ -127,6 +144,7 @@ class ApiMembersController extends Controller
 		return response()->json([
 			'member' => $member,
 			'collections' => $collections,
+			'payments' => $payments,
 			'current_page' => $current_page
 		]);
 	}

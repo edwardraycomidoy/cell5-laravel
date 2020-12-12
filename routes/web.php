@@ -32,8 +32,11 @@ Route::middleware(['guest'])->group(function() {
 Route::middleware(['auth'])->group(function() {
 	Route::get('/members/search', [MembersController::class, 'search'])->name('members.search');
 	Route::resource('members', MembersController::class);
+
 	Route::resource('collections', CollectionsController::class);
-	Route::resource('payments', PaymentsController::class)->only(['store', 'destroy']);
+
+	Route::delete('payments', [PaymentsController::class, 'destroy'])->name('payments.destroy');
+	Route::resource('payments', PaymentsController::class)->only('store');
 });
 
 Route::post('/logout', [LogoutController::class, 'store'])->name('logout');

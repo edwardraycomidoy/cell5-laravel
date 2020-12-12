@@ -45,11 +45,17 @@
 				@endforeach
 			</tbody>
 		</table>
-		{{ $members->links() }}
 		<form action="{{ route('payments.store') }}" method="post" id="mark-paid-form">
 			@csrf
 			<input type="hidden" name="member_id">
 			<input type="hidden" name="collection_id">
 		</form>
+		<form action="{{ route('payments.destroy') }}" method="post" id="mark-unpaid-form">
+			@csrf
+			@method('delete')
+			<input type="hidden" name="member_id">
+			<input type="hidden" name="collection_id">
+		</form>
+		{{ $members->links() }}
 	@endif
 </div>

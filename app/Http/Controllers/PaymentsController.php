@@ -38,8 +38,18 @@ class PaymentsController extends Controller
 		echo json_encode([]);
 	}
 
-	public function destroy($id)
+	public function destroy(Request $request)
 	{
-		//
+		if(preg_match($this->regex, $request->member_id) == 0 || preg_match($this->regex, $request->collection_id) == 0)
+		{
+			echo json_encode([]);
+			die;
+		}
+
+		Payment::where('member_id', $request->member_id)
+			   ->where('collection_id', $request->collection_id)
+			   ->delete();
+
+		echo json_encode([]);
 	}
 }

@@ -20,7 +20,9 @@
 						<th>Member</th>
 						<th>Claimant</th>
 						<th>Due on</th>
+						<!--
 						<th>Released on</th>
+						-->
 						<th>&nbsp;</th>
 					</tr>
 				</thead>
@@ -38,6 +40,7 @@
 								@endif
 							</td>
 							<td>{{ $collection->due_on }}</td>
+							<!--
 							<td>
 								@if(!is_null($collection->released_on))
 									{{ $collection->released_on }}
@@ -45,6 +48,7 @@
 									&nbsp;
 								@endif
 							</td>
+							-->
 							<td>
 								<a href="{{ route('collections.show', $collection->id) }}">View</a>
 							</td>

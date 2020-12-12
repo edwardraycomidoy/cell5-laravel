@@ -12,7 +12,9 @@
 					<th>Member</th>
 					<th>Claimant</th>
 					<th>Due on</th>
+					<!--
 					<th>Released on</th>
+					-->
 				</tr>
 			</thead>
 			<tbody>
@@ -28,6 +30,7 @@
 						@endif
 					</td>
 					<td>{{ $collection->due_on }}</td>
+					<!--
 					<td>
 						@if(!is_null($collection->released_on))
 							{{ $collection->released_on }}
@@ -35,6 +38,7 @@
 							&nbsp;
 						@endif
 					</td>
+					-->
 				</tr>
 			</tbody>
 		</table>
