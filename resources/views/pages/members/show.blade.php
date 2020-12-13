@@ -11,8 +11,8 @@
 
 		<a href="{{ route('members.edit', $member) }}" class="btn btn-sm btn-info rounded-0">Edit</a>
 
-		<a href="javascript:void(0);" class="btn btn-sm btn-danger rounded-0" onclick="$('#delete-member').submit();">Delete</a>
-		<form action="{{ route('members.destroy', $member) }}" method="post" id="delete-member">
+		<a href="javascript:void(0);" id="delete-member-a" class="btn btn-sm btn-danger rounded-0">Delete</a>
+		<form action="{{ route('members.destroy', $member) }}" method="post" id="delete-member-form">
 			@csrf
 			@method('delete')
 		</form>

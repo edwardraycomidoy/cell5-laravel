@@ -211,6 +211,13 @@ class CollectionsController extends Controller
 
 	public function destroy($id)
 	{
+		if(preg_match($this->regex, $id) == 0)
+			return redirect()->route('collections.index');
+
+		$collection = Collection::find($id);
+		if(!is_null($collection))
+			$collection->delete();
+
 		return redirect()->route('collections.index')->with([
 			'type' => 'success',
 			'message' => 'Collection removed.'

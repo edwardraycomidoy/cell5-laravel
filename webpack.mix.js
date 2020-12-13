@@ -15,3 +15,7 @@ mix.js('resources/js/app.js', 'public/js')
     .postCss('resources/css/app.css', 'public/css', [
         //
     ]);
+
+//.js('node_modules/popper.js/dist/popper.min.js', 'public/js')
+//.js('node_modules/bootbox/dist/bootbox.min.js', 'public/js')
+//.js('node_modules/bootbox/dist/bootbox.locales.min.js', 'public/js');

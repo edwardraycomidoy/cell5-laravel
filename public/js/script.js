@@ -74,4 +74,20 @@ $(function() {
 			$('#members-list').replaceWith(html);
 		}, 'html')
 	})
+
+	$('#delete-member-a').on('click', function(event) {
+		event.preventDefault()
+		bootbox.confirm('Are you sure you want to delete this member?', function(result) {
+			if(result === true)
+				$('#delete-member-form').submit()
+		})
+	})
+
+	$('#delete-collection-a').on('click', function(event) {
+		event.preventDefault()
+		bootbox.confirm('Are you sure you want to delete this collection?', function(result) {
+			if(result === true)
+				$('#delete-collection-form').submit()
+		})
+	})
 })
