@@ -251,4 +251,19 @@ class ApiCollectionsController extends Controller
 			'message' => 'Collection updated.'
 		]);
 	}
+
+	public function destroy($id)
+	{
+		if(preg_match($this->regex, $id) == 0)
+			return redirect()->route('collections.index');
+
+		$collection = Collection::find($id);
+		if(!is_null($collection))
+			$collection->delete();
+
+		return response()->json([
+			'type' => 'success',
+			'message' => 'Collection deleted.'
+		]);
+	}
 }

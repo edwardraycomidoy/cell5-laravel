@@ -220,7 +220,7 @@ class CollectionsController extends Controller
 
 		return redirect()->route('collections.index')->with([
 			'type' => 'success',
-			'message' => 'Collection removed.'
+			'message' => 'Collection deleted.'
 		]);
 	}
 }

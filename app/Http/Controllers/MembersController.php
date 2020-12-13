@@ -233,7 +233,7 @@ class MembersController extends Controller
 
 		return redirect()->route('members.index')->with([
 			'type' => 'success',
-			'message' => 'Member removed.'
+			'message' => 'Member deleted.'
 		]);
 	}
 }

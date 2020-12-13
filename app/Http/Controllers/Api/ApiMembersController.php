@@ -177,4 +177,19 @@ class ApiMembersController extends Controller
 			'message' => 'Member updated.'
 		]);
 	}
+
+	public function destroy($id)
+	{
+		if(preg_match($this->regex, $id) == 0)
+			return redirect()->route('members.index');
+
+		$member = Member::find($id);
+		if(!is_null($member))
+			$member->delete();
+
+		return response()->json([
+			'type' => 'success',
+			'message' => 'Member deleted.'
+		]);
+	}
 }
